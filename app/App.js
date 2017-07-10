@@ -16,6 +16,26 @@ class App extends Component {
       type: 'All'
     }
     this.submitTodo = this.submitTodo.bind(this)
+    this.toggleComplete = this.toggleComplete.bind(this)
+    this.deleteTodo = this.deleteTodo.bind(this)
+  }
+
+  deleteTodo(todoIndex) {
+    let { todos } = this.state
+    todos = this.state.todos.filter((todo) => {
+      return todo.todoIndex !== todoIndex
+    })
+    this.setState({todos})
+  }
+
+  toggleComplete(todoIndex) {
+    let { todos } = this.state
+    todos.forEach((todo) => {
+      if (todo.todoIndex == todoIndex) {
+        todo.complete = !todo.complete
+      }
+    })
+    this.setState({todos})
   }
 
   inputChange(inputValue) {
@@ -32,8 +52,8 @@ class App extends Component {
       title: this.state.inputValue,
       todoIndex: todoIndex,
       complete: false
-    }
 
+    }
     todoIndex++
     this.state.todos.push(todo)
     this.setState({ todos: this.state.todos, inputValue: '' }, () => {
@@ -52,7 +72,10 @@ class App extends Component {
           <Input
             inputValue={inputValue}
             inputChange={(text) => this.inputChange(text)} />
-          <TodoList todos={todos} />
+          <TodoList
+            toggleComplete={this.toggleComplete}
+            deleteTodo={this.deleteTodo}
+            todos={todos} />
           <Button submitTodo={this.submitTodo} />
         </ScrollView>
       </View>
